@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react'
 import Card from '../../components/Card'
 import styled from 'styled-components'
 import colors from '../../utils/style/colors'
 import { Loader } from '../../utils/style/Atoms'
+import { useFetch } from '../../utils/hooks'
 
 const CardsContainer = styled.div`
   display: grid;
@@ -36,19 +36,10 @@ const Center = styled.div`
 `
 
 function Freelances() {
-  const [isDataLoading, setDataLoading] = useState(false)
-  const [freelanceProfiles, setFreelanceProfiles] = useState([])
-
-  useEffect(() => {
-    setDataLoading(true)
-    fetch(`http://localhost:8000/freelances`).then((response) =>
-      response.json().then(({ freelancersList }) => {
-        setFreelanceProfiles(freelancersList)
-        console.log(freelanceProfiles)
-        setDataLoading(false)
-      })
-    )
-  }, [])
+  const { isLoading, data, error } = useFetch(
+    `http://localhost:8000/freelances`
+  )
+  const { freelancersList } = data
 
   return (
     <div>
@@ -57,13 +48,13 @@ function Freelances() {
         Chez Shiny nous réunissons les meilleurs profils pour vous.
       </PageSubtitle>
 
-      {isDataLoading ? (
+      {isLoading ? (
         <Center>
           <Loader />
         </Center>
       ) : (
         <CardsContainer>
-          {freelanceProfiles.map((profile, index) => (
+          {freelancersList.map((profile, index) => (
             <Card
               key={`${profile.name}-${index}`}
               label={profile.job}
