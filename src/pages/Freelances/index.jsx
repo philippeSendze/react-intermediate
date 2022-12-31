@@ -50,7 +50,7 @@ function Freelances() {
 
       {isLoading ? (
         <Center>
-          <Loader />
+          <Loader data-testid="loader" />
         </Center>
       ) : (
         <CardsContainer>

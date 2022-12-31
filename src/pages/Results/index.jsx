@@ -85,7 +85,7 @@ function Results() {
 
   return isLoading ? (
     <LoaderWrapper>
-      <Loader />
+      <Loader data-testid="loader" />
     </LoaderWrapper>
   ) : (
     <ResultsContainer theme={theme}>
@@ -96,6 +96,7 @@ function Results() {
             <JobTitle
               key={`result-title-${index}-${result.title}`}
               theme={theme}
+              data-testid={'job-title'}
             >
               {formatJobList(result.title, resultsData.length, index)}
             </JobTitle>
@@ -110,8 +111,11 @@ function Results() {
             <JobDescription
               theme={theme}
               key={`result-detail-${index}-${result.title}`}
+              data-testid={'description'}
             >
-              <JobTitle theme={theme}>{result.title}</JobTitle>
+              <JobTitle theme={theme} data-testid={'job-title'}>
+                {result.title}
+              </JobTitle>
               <p>{result.description}</p>
             </JobDescription>
           ))}

@@ -1,3 +1,13 @@
+import { rest } from 'msw'
+import { setupServer } from 'msw/node'
+import {
+  waitFor,
+  screen,
+  waitForElementToBeRemoved,
+} from '@testing-library/react'
+import { render } from '../../utils/test'
+
+import Results from './index'
 import { formatJobList, formatQueryParams } from '.'
 
 describe('The formatJobList function', () => {
@@ -23,4 +33,43 @@ describe('The formatQueryParams function', () => {
       expectedState
     )
   })
+})
+
+const resultsMockedData = [
+  {
+    title: 'test 1',
+    description: 'description 1',
+  },
+  {
+    title: 'test 2',
+    description: 'description 2',
+  },
+]
+
+const server = setupServer(
+  rest.get('http://localhost:8000/results/', (req, res, ctx) => {
+    return res(ctx.json({ resultsData: resultsMockedData }))
+  })
+)
+
+beforeAll(() => server.listen())
+afterEach(() => server.resetHandlers())
+afterAll(() => server.close())
+
+test('Should display results after the data is loaded', async () => {
+  render(<Results />)
+
+  // expect(screen.getByTestId('loader')).toBeTruthy()
+  // const jobTitleElements = screen.getAllByTestId('job-title')
+  // expect(jobTitleElements[0].textContent).toBe('seo')
+  // expect(jobTitleElements.length).toBe(2)
+  // const jobDescriptionElements = screen.getAllByTestId('job-description')
+  // expect(jobDescriptionElements[1].textContent).toBe(
+  //   resultsMockedData[1].description
+  // )
+  // expect(jobDescriptionElements.length).toBe(2)
+  // await waitFor(() => {
+  //   expect(screen.getByText('test 1')).toBeTruthy()
+  //   expect(screen.getByText('test 2')).toBeTruthy()
+  // })
 })
